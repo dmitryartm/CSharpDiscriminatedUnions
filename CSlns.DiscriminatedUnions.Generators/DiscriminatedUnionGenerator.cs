@@ -123,13 +123,13 @@ public enum {enumName} {{
         src.AppendLine($@"
     public {enumName} Case {{ get; }}
 ");
+        src.AppendLine();
 
         foreach (var prop in cases) {
-            src.AppendLine($@"
-    private readonly {prop.Type.ToDisplayString()} _{prop.Name};
-");
+            src.AppendLine($"    private readonly {prop.Type.ToDisplayString()} _{prop.Name};");
         }
-
+        src.AppendLine();
+        
         src.AppendLine($@"
     private {typeName}(
         {enumName} @case,
@@ -145,7 +145,8 @@ public enum {enumName} {{
     public static {typeNameWithParameters} {prop.Name}({prop.Type.ToDisplayString()} {prop.Name}) {{
         return new {typeNameWithParameters}(
             {enumName}.{prop.Name},
-            {string.Join(Separator(3, ","), cases.Select(x => x.Equals(prop) ? prop.Name : "default!"))});
+            {string.Join(Separator(3, ","), cases.Select(x => x.Equals(prop) ? prop.Name : "default!"))}
+        );
     }}
 ");
         }
@@ -207,6 +208,7 @@ public enum {enumName} {{
         src.AppendLine("            default: throw new ArgumentOutOfRangeException($\"Invalid union case '{this.Case}'\");");
         src.AppendLine("        }");
         src.AppendLine("    }");
+        src.AppendLine();
 
         src.Append($@"
     public void Do(
@@ -224,6 +226,7 @@ public enum {enumName} {{
         src.AppendLine("            default: throw new ArgumentOutOfRangeException($\"Invalid union case '{this.Case}'\");");
         src.AppendLine("        }");
         src.AppendLine("    }");
+        src.AppendLine();
 
         src.Append($@"
     public T Switch<T>(
@@ -239,6 +242,7 @@ public enum {enumName} {{
         src.AppendLine("            default: throw new ArgumentOutOfRangeException($\"Invalid union case '{this.Case}'\");");
         src.AppendLine("        }");
         src.AppendLine("    }");
+        src.AppendLine();
 
 
         src.Append($@"
@@ -255,11 +259,12 @@ public enum {enumName} {{
         src.AppendLine("            default: throw new ArgumentOutOfRangeException($\"Invalid union case '{this.Case}'\");");
         src.AppendLine("        }");
         src.AppendLine("    }");
+        src.AppendLine();
 
 
         string Separator(int offset, string separator = "") {
             var builder = new StringBuilder();
-            builder.Append(separator);
+            builder.AppendLine(separator);
             for (var i = 0; i < offset; ++i) {
                 builder.Append("    ");
             }
