@@ -1,25 +1,56 @@
 # CSlns.DiscriminatedUnions
 
-Discriminated union type generator for C#.
+Discriminated union type generator for C#. Generated types are similar in
+functionality to F# discriminated unions.
 
-[F# reference on dicscriminated unions](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/discriminated-unions)
+> #### [F# reference on dicscriminated unions](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/discriminated-unions)
+> Discriminated unions provide support for values that can be one of a number of
+> named cases. Unlike unions in some other languages like union type in C++ or a
+> variant type in Visual Basic, however, each of the possible
+> options is given a case identifier. The case identifiers are names for the
+> various possible types of values that objects of this type could be.
 
-Discriminated unions provide support for values that can be one of a number of
-named cases. Discriminated unions are similar to union types in other languages,
-but there are differences. As with a union type in C++ or a variant type in
-Visual Basic, the data stored in the value can be one of several distinct
-options. Unlike unions in these other languages, however, each of the possible
-options is given a case identifier. The case identifiers are names for the
-various possible types of values that objects of this type could be.
+For a type to be processed as a discriminated union following conditions need to
+be met:
 
-To generate discriminated union type needs to be
-* type needs to be partial
-* type need to have `DiscriminatedUnion` attribute
-* contain definition of type named `Union`, public properties of which are used
-  to define cases.
-
+* Type has to be partial, classes, structs and records are supported
+* Type has to contain definition of inner type named `Union`, public properties
+  of which are
+  used to define name and value type for cases
+* Type has to have a `DiscriminatedUnion` attribute
 
 ```c#
+[DiscriminatedUnion]
+public partial class Result<TOk, TError> {
+    private record Union(
+        TOk Ok,
+        TError Error
+    );
+}
+```
+
+This code will generate following
+file [Result.g.cs](./Docs/GeneratedFiles/Result.g.cs)
+
+To save generated files during build process you need to
+set `EmitCompilerGeneratedFiles` and `CompilerGeneratedFilesOutputPath`
+properties in project file. For Example:
+
+```xml
+
+<PropertyGroup>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>
+        $(BaseIntermediateOutputPath)\GeneratedFiles
+    </CompilerGeneratedFilesOutputPath>
+</PropertyGroup>
+```
+
+Most concise way to define inner type `Union` is to use a record type, but
+regular class can be used. Following definition is equivalent to the previous
+one.
+
+```cs
 [DiscriminatedUnion]
 public partial record Result<TOk, TError> {
     private class Union {
@@ -29,143 +60,9 @@ public partial record Result<TOk, TError> {
 }
 ```
 
-```c#
-public void 
-```
+## Code Examples
 
-## Using a Discriminated Union
-
-To define a discriminated union type `Result<TOk, TError>` with two cases `Ok`
-of type `TOk`
-
-
-<table>
-<style>
-td { vertical-align: top; }
-</style>
-
-<tr>
-<td style="text-align: center">C#</td>
-<td style="text-align: center">F#</td>
-</tr>
-
-<tr>
-<td colspan="2" style="text-align: center">Type declaration</td>
-</tr>
-
-<tr>
-<td>
-
-```c#
-[DiscriminatedUnion]
-public partial record Result<TOk, TError> {
-    private record Union(
-        TOk Ok,
-        TError Error
-    );
-}
-```
-
-</td>
-<td>
-
-```f#
-type Result<'TOk, 'TError> =
-    | Ok of 'TOk
-    | Error of 'TError
-```
-
-</td>
-
-</tr>
-
-
-<tr>
-<td colspan="2" style="text-align: center">Creating instances</td>
-</tr>
-
-<tr>
-<td>
-
-```c#
-var ok = Result<int, string>.Ok(123);
-var error = Result<int, string>.Error("My scary ERROR!");
-```
-
-</td>
-
-<td>
-
-```f#
-let ok = Result.Ok 123
-let error = Result.Error "My scary ERROR!"
-```
-
-</td>
-</tr>
-
-
-<tr>
-<td colspan="2" style="text-align: center">Matching</td>
-</tr>
-
-<tr>
-<td>
-
-```c#
-result.Switch(
-    Ok: value => value,
-    Error: error => throw new InvalidOperationException(error)
-);
-```
-
-<p style="text-align: center;">
-Or
-</p>
-
-```c#
-result.Case switch {
-    ResultEnum.Ok => result.GetOk(),
-    ResultEnum.Error => throw new InvalidOperationException(result.GetError()),
-    _ => throw new ArgumentOutOfRangeException()
-};
-```
-
-</td>
-
-<td>
-
-```f#
-match result with
-| Ok ok -> ok
-| Error error -> raise (InvalidOperationException error)
-```
-
-</td>
-</tr>
-
-
-</table>
-
-
-<table>
-<style>
-td { vertical-align: top; }
-</style>
-
-<tr>
-<td style="text-align: center">C#</td>
-<td style="text-align: center">F#</td>
-</tr>
-
-
-<tr>
-<td colspan="2" style="text-align: center">Type declaration</td>
-</tr>
-
-
-<tr>
-<td>
+### Type declaration
 
 ```c#
 [DiscriminatedUnion]
@@ -178,28 +75,9 @@ public partial record Shape {
 }
 ```
 
-</td>
+This code will generate file [Shape.g.cs](./Docs/GeneratedFiles/Shape.g.cs)
 
-<td>
-
-```f#
-type Shape =
-    | Circle of Radius: double
-    | Square of Side: double
-    | Rectangle of Side0: double * Side1: double
-```
-
-</td>
-</tr>
-
-
-<tr>
-<td colspan="2" style="text-align: center">Creating instances</td>
-</tr>
-
-
-<tr>
-<td>
+### Creating instances
 
 ```c#
 var circle = Shape.Circle(10.0);
@@ -207,25 +85,7 @@ var square = Shape.Square(5.0);
 var rectangle = Shape.Rectangle((2.0, 8.0));
 ```
 
-</td>
-
-<td>
-
-```f#
-let circle = Shape.Circle 10.0
-let square = Shape.Square 5.0
-let rectangle = Shape.Rectangle (2.0, 8.0)
-```
-
-</td>
-</tr>
-
-<tr>
-<td colspan="2" style="text-align: center">Matching</td>
-</tr>
-
-<tr>
-<td>
+### Case Matching
 
 ```c#
 double GetArea(Shape shape) =>
@@ -243,9 +103,7 @@ double GetCircleRadius(Shape shape) =>
     );
 ```
 
-<p style="text-align: center;">
 Or
-</p>
 
 ```c#
 double GetArea(Shape shape) {
@@ -271,51 +129,26 @@ double GetCircleRadius(Shape shape) =>
     };
 ```
 
-</td>
-
-<td>
+### Equivalent code in F#
 
 ```f#
+type Shape =
+    | Circle of Radius: double
+    | Square of Side: double
+    | Rectangle of Side0: double * Side1: double
+    
+let circle = Shape.Circle 10.0
+let square = Shape.Square 5.0
+let rectangle = Shape.Rectangle (2.0, 8.0)
+
 let GetArea shape =
     match shape with
     | Circle radius -> Math.PI * radius * radius
     | Square side -> side * side
     | Rectangle (side0, side1) -> side0 * side1
     
-    
 let GetCircleRadius shape =
     match shape with
     | Circle r -> r
-    | other -> 
-        raise (InvalidOperationException (
-            sprintf $"%A{otherShape} is not a circle"))
+    | other -> raise (InvalidOperationException (sprintf $"%A{otherShape} is not a circle"))
 ```
-
-</td>
-</tr>
-
-</table>
-
-Type has to be partial and contain definition of type named `Union`, public
-properties of which are used to define
-union cases.
-
-Type `Union` used only for defining cases, no instances of this type are created
-at any point.
-
-Most concise way to define inner type `Union` is to use a record type, but
-regular class can be used.
-
-```cs
-[DiscriminatedUnion]
-public partial record Result<TOk, TError> {
-    private class Union {
-        public TOk Ok { get; }
-        public TError Error { get; }
-    }
-}
-```
-
-
-
-
