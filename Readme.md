@@ -1,4 +1,4 @@
-# CSlns.DiscriminatedUnions
+# CSharpDiscriminatedUnions
 
 Discriminated union type generator for C#. Generated types are similar in
 functionality to F# discriminated unions.
