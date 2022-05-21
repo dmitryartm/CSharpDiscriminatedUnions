@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace CSlns.DiscriminatedUnions.Tests;
+namespace CSharpDiscriminatedUnions.Tests;
 
 
 [DiscriminatedUnion]
@@ -38,9 +38,9 @@ public class Tests {
     public void CasePropertyValueTest() {
         var (union0, union1, union2) = CreateUnions();
 
-        Assert.AreEqual(Choice3Enum.Case0, union0.Case);
-        Assert.AreEqual(Choice3Enum.Case1, union1.Case);
-        Assert.AreEqual(Choice3Enum.Case2, union2.Case);
+        Assert.AreEqual<Choice3Enum>(Choice3Enum.Case0, union0.Case);
+        Assert.AreEqual<Choice3Enum>(Choice3Enum.Case1, union1.Case);
+        Assert.AreEqual<Choice3Enum>(Choice3Enum.Case2, union2.Case);
     }
 
 
@@ -48,7 +48,7 @@ public class Tests {
     public void SwitchExhaustive() {
         var (union0, union1, union2) = CreateUnions();
 
-        Assert.AreEqual(
+        Assert.AreEqual<int>(
             IntValue,
             union0.Switch(
                 Case0: value => value,
@@ -57,7 +57,7 @@ public class Tests {
             )
         );
 
-        Assert.AreEqual(
+        Assert.AreEqual<float>(
             FloatValue,
             union1.Switch(
                 Case0: value => throw new InvalidOperationException($"Unexpected Case0 Value {value}"),
@@ -66,7 +66,7 @@ public class Tests {
             )
         );
 
-        Assert.AreEqual(
+        Assert.AreEqual<string>(
             StringValue,
             union2.Switch(
                 Case0: value => throw new InvalidOperationException($"Unexpected Case0 Value {value}"),
@@ -81,7 +81,7 @@ public class Tests {
     public void SwitchNonExhaustive() {
         var (union0, union1, union2) = CreateUnions();
 
-        Assert.AreEqual(
+        Assert.AreEqual<int>(
             IntValue,
             union0.Switch(
                 Case0: value => value,
@@ -90,14 +90,14 @@ public class Tests {
         );
 
         Assert.IsTrue(
-            union0.Switch(
+            (bool) union0.Switch(
                 Case1: value => throw new InvalidOperationException($"Unexpected Case1 Value {value}"),
                 Case2: value => throw new InvalidOperationException($"Unexpected Case2 Value {value}"),
                 Default: value => true
             )
         );
 
-        Assert.AreEqual(
+        Assert.AreEqual<float>(
             FloatValue,
             union1.Switch(
                 Case1: value => value,
@@ -106,14 +106,14 @@ public class Tests {
         );
 
         Assert.IsTrue(
-            union1.Switch(
+            (bool) union1.Switch(
                 Case0: value => throw new InvalidOperationException($"Unexpected Case0 Value {value}"),
                 Case2: value => throw new InvalidOperationException($"Unexpected Case2 Value {value}"),
                 Default: value => true
             )
         );
 
-        Assert.AreEqual(
+        Assert.AreEqual<string>(
             StringValue,
             union2.Switch(
                 Case2: value => value,
@@ -122,7 +122,7 @@ public class Tests {
         );
 
         Assert.IsTrue(
-            union2.Switch(
+            (bool) union2.Switch(
                 Case0: value => throw new InvalidOperationException($"Unexpected Case0 Value {value}"),
                 Case1: value => throw new InvalidOperationException($"Unexpected Case1 Value {value}"),
                 Default: value => true
@@ -228,18 +228,18 @@ public class Tests {
     public void GetCaseValue() {
         var (union0, union1, union2) = CreateUnions();
 
-        Assert.AreEqual(IntValue, union0.GetCase0());
+        Assert.AreEqual<int>(IntValue, union0.GetCase0());
         Assert.ThrowsException<InvalidOperationException>(() => union0.GetCase1());
         Assert.ThrowsException<InvalidOperationException>(() => union0.GetCase2());
 
         Assert.ThrowsException<InvalidOperationException>(() => union1.GetCase0());
-        Assert.AreEqual(FloatValue, union1.GetCase1());
+        Assert.AreEqual<float>(FloatValue, union1.GetCase1());
         Assert.ThrowsException<InvalidOperationException>(() => union1.GetCase2());
 
 
         Assert.ThrowsException<InvalidOperationException>(() => union2.GetCase0());
         Assert.ThrowsException<InvalidOperationException>(() => union2.GetCase1());
-        Assert.AreEqual(StringValue, union2.GetCase2());
+        Assert.AreEqual<string>(StringValue, union2.GetCase2());
     }
 
 
@@ -248,27 +248,27 @@ public class Tests {
         var (union0, union1, union2) = CreateUnions();
 
         {
-            Assert.IsTrue(union0.TryGetCase0(out var case0));
-            Assert.IsFalse(union0.TryGetCase1(out _));
-            Assert.IsFalse(union0.TryGetCase2(out _));
+            Assert.IsTrue((bool) union0.TryGetCase0(out var case0));
+            Assert.IsFalse((bool) union0.TryGetCase1(out _));
+            Assert.IsFalse((bool) union0.TryGetCase2(out _));
 
-            Assert.AreEqual(IntValue, case0);
+            Assert.AreEqual<int>(IntValue, case0);
         }
 
         {
-            Assert.IsFalse(union1.TryGetCase0(out _));
-            Assert.IsTrue(union1.TryGetCase1(out var case1));
-            Assert.IsFalse(union1.TryGetCase2(out _));
+            Assert.IsFalse((bool) union1.TryGetCase0(out _));
+            Assert.IsTrue((bool) union1.TryGetCase1(out var case1));
+            Assert.IsFalse((bool) union1.TryGetCase2(out _));
 
-            Assert.AreEqual(FloatValue, case1);
+            Assert.AreEqual<float>(FloatValue, case1);
         }
 
         {
-            Assert.IsFalse(union2.TryGetCase0(out _));
-            Assert.IsFalse(union2.TryGetCase1(out _));
-            Assert.IsTrue(union2.TryGetCase2(out var case2));
+            Assert.IsFalse((bool) union2.TryGetCase0(out _));
+            Assert.IsFalse((bool) union2.TryGetCase1(out _));
+            Assert.IsTrue((bool) union2.TryGetCase2(out var case2));
 
-            Assert.AreEqual(StringValue, case2);
+            Assert.AreEqual<string>(StringValue, case2);
         }
     }
 

@@ -1,9 +1,9 @@
 ﻿#nullable enable
 using System;
-using CSlns.DiscriminatedUnions;
+using CSharpDiscriminatedUnions;
 
 
-namespace CSlns.DiscriminatedUnions.Tests {
+namespace CSharpDiscriminatedUnions.Tests {
 
 
 

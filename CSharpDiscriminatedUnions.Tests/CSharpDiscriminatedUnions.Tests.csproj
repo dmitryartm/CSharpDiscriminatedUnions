@@ -7,6 +7,8 @@
         <IsPackable>false</IsPackable>
 
         <LangVersion>10</LangVersion>
+
+        <RootNamespace>CSharpDiscriminatedUnions.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,8 +19,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CSlns.DiscriminatedUnions.Generators\CSlns.DiscriminatedUnions.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
-      <ProjectReference Include="..\CSlns.DiscriminatedUnions.Runtime\CSlns.DiscriminatedUnions.Runtime.csproj" />
+      <ProjectReference Include="..\CSharpDiscriminatedUnions.Generators\CSharpDiscriminatedUnions.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+      <ProjectReference Include="..\CSharpDiscriminatedUnions.Runtime\CSharpDiscriminatedUnions.Runtime.csproj" />
     </ItemGroup>
 
     <PropertyGroup>

@@ -1,5 +1,5 @@
 ﻿#nullable enable
-using CSlns.DiscriminatedUnions;
+using CSharpDiscriminatedUnions;
 using System;
 
 

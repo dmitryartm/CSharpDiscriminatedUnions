@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>10</LangVersion>
         <Nullable>enable</Nullable>
-        <RootNamespace>CSlns.DiscriminatedUnions.Generators</RootNamespace>
+        <RootNamespace>CSharpDiscriminatedUnions.Generators</RootNamespace>
         <IsPackable>False</IsPackable>
         <NoWarn>$(NoWarn);RS1024</NoWarn>
     </PropertyGroup>
@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CSlns.DiscriminatedUnions.Runtime\CSlns.DiscriminatedUnions.Runtime.csproj" />
+      <ProjectReference Include="..\CSharpDiscriminatedUnions.Runtime\CSharpDiscriminatedUnions.Runtime.csproj" />
     </ItemGroup>
 
 </Project>

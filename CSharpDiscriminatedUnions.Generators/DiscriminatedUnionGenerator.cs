@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -7,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
-namespace CSlns.DiscriminatedUnions.Generators;
+namespace CSharpDiscriminatedUnions.Generators;
 
 
 [Generator]
@@ -87,7 +86,7 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator {
             .Select(x => x.ContainingNamespace)
             .Where(x => !x.IsGlobalNamespace)
             .Select(x => x.ToString())
-            .Append("CSlns.DiscriminatedUnions")
+            .Append("CSharpDiscriminatedUnions")
             .Append("System")
             .Distinct();
 
